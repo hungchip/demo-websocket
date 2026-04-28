@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { NotificationOutlined } from "@ant-design/icons";
+import { CheckCircleTwoTone, ClockCircleTwoTone, NotificationOutlined } from "@ant-design/icons";
 import { Avatar, Empty, List, Segmented, Space, Spin, Typography } from "antd";
 import { formatTime } from "../../utils/notificationUtils";
 
@@ -12,6 +12,7 @@ export default function NotificationPopoverContent({
   filter,
   onFilterChange,
   notifications,
+  onNotificationClick,
 }) {
   const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -90,10 +91,28 @@ export default function NotificationPopoverContent({
             ),
           }}
           renderItem={(item) => (
-            <List.Item>
+            <List.Item
+              onClick={() => onNotificationClick?.(item.id)}
+              className={`notification-item ${item.isRead ? "is-read" : "is-unread"}`}
+            >
               <List.Item.Meta
                 avatar={<Avatar icon={<NotificationOutlined />} />}
-                title={item.title}
+                title={
+                  <div className="notification-title-row">
+                    <Text
+                      strong={!item.isRead}
+                      ellipsis={{ tooltip: item.title }}
+                      className="notification-title-text"
+                    >
+                      {item.title}
+                    </Text>
+                    {item.isRead ? (
+                      <CheckCircleTwoTone twoToneColor="#52c41a" />
+                    ) : (
+                      <ClockCircleTwoTone twoToneColor="#faad14" />
+                    )}
+                  </div>
+                }
                 description={
                   <Space direction="vertical" size={0}>
                     <Text type="secondary">{item.content}</Text>

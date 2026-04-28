@@ -24,4 +24,5 @@ export const buildNotification = (payload) => ({
   title: payload.title || "Breaking update",
   content: payload.content || "New story available in your feed.",
   sentAt: payload.sentAt || new Date().toISOString(),
+  isRead: Boolean(payload.isRead),
 });

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client/dist/sockjs";
 import { RANDOM_TOPICS, WS_URL_CANDIDATES } from "../constants/appConfig";
@@ -17,7 +17,6 @@ export const useRealtimeNews = (token, onRealtimeError) => {
   const [wsUrlInUse, setWsUrlInUse] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [latestRandom, setLatestRandom] = useState(null);
-  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     if (!token) {
@@ -25,7 +24,6 @@ export const useRealtimeNews = (token, onRealtimeError) => {
       setWsUrlInUse("");
       setNotifications([]);
       setLatestRandom(null);
-      setUnreadCount(0);
       return undefined;
     }
 
@@ -64,7 +62,6 @@ export const useRealtimeNews = (token, onRealtimeError) => {
             console.log('message', message, body);
             const normalized = buildNotification(body);
             setNotifications((prev) => [normalized, ...prev].slice(0, MAX_NOTIFICATIONS));
-            setUnreadCount((prev) => prev + 1);
           });
 
           RANDOM_TOPICS.forEach((topic) => {
@@ -101,19 +98,28 @@ export const useRealtimeNews = (token, onRealtimeError) => {
     };
   }, [token, onRealtimeError]);
 
-  const clearUnread = useCallback(() => setUnreadCount(0), []);
-
   const resetFeed = useCallback(() => {
     setNotifications([]);
     setLatestRandom(null);
-    setUnreadCount(0);
   }, []);
 
   const addLocalNotification = useCallback((payload) => {
     const simulated = buildNotification(payload);
     setNotifications((prev) => [simulated, ...prev].slice(0, MAX_NOTIFICATIONS));
-    setUnreadCount((prev) => prev + 1);
   }, []);
+
+  const markNotificationAsRead = useCallback((notificationId) => {
+    setNotifications((prev) =>
+      prev.map((item) =>
+        item.id === notificationId && !item.isRead ? { ...item, isRead: true } : item
+      )
+    );
+  }, []);
+
+  const unreadCount = useMemo(
+    () => notifications.reduce((count, item) => count + (item.isRead ? 0 : 1), 0),
+    [notifications]
+  );
 
   const disconnect = useCallback(async () => {
     if (clientRef.current) {
@@ -129,9 +135,9 @@ export const useRealtimeNews = (token, onRealtimeError) => {
     notifications,
     latestRandom,
     unreadCount,
-    clearUnread,
     resetFeed,
     addLocalNotification,
+    markNotificationAsRead,
     disconnect,
   };
 };

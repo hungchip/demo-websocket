@@ -46,6 +46,9 @@ export default function NewsHeader({
           placement="bottomRight"
           open={notifOpen}
           onOpenChange={onNotifOpenChange}
+          getPopupContainer={(triggerNode) =>
+            triggerNode?.parentElement || document.body
+          }
         >
           <Badge count={unreadCount} size="small" offset={[-2, 2]}>
             <Button shape="circle" icon={<BellOutlined />} />

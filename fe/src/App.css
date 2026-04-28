@@ -60,6 +60,29 @@
   padding-inline: 16px;
 }
 
+.scroll-test-section {
+  background: #ffffff;
+  border: 1px solid #e5eaf3;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.scroll-test-block {
+  border: 1px solid #eef2f8;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+  background: #fafcff;
+}
+
+.scroll-test-block h4 {
+  margin-bottom: 8px;
+}
+
+.scroll-test-block p {
+  margin-bottom: 6px;
+}
+
 .headline-slide {
   background: linear-gradient(145deg, #f0f5ff, #ffffff);
   border: 1px solid #e2e8f0;
@@ -72,6 +95,31 @@
   width: min(420px, 80vw);
   max-height: 420px;
   overflow: auto;
+}
+
+.notification-item {
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.notification-item:hover {
+  background: #f5f8ff;
+}
+
+.notification-item.is-unread {
+  background: #f8fbff;
+}
+
+.notification-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notification-title-text {
+  flex: 1;
+  min-width: 0;
 }
 
 @media (max-width: 992px) {

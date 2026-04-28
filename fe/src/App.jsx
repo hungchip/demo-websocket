@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Col, Layout, Row, Space } from "antd";
+import { useCallback, useMemo, useState } from "react";
+import { Alert, Col, Layout, Row, Space, Typography } from "antd";
 import LoginView from "./components/auth/LoginView";
 import NewsHeader from "./components/layout/NewsHeader";
 import HeadlineCarouselCard from "./components/news/HeadlineCarouselCard";
@@ -15,6 +15,7 @@ import { loginRequest } from "./services/authService";
 import { publishNotification } from "./services/notificationService";
 
 const { Content } = Layout;
+const { Paragraph, Title } = Typography;
 
 function App() {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || "");
@@ -36,24 +37,18 @@ function App() {
     notifications,
     latestRandom,
     unreadCount,
-    clearUnread,
     resetFeed,
     addLocalNotification,
+    markNotificationAsRead,
     disconnect,
   } = useRealtimeNews(token, handleRealtimeError);
 
-  useEffect(() => {
-    if (notifOpen) {
-      clearUnread();
-    }
-  }, [notifOpen, clearUnread]);
-
   const visibleNotifications = useMemo(() => {
     if (notificationFilter === "unread") {
-      return notifications.slice(0, unreadCount);
+      return notifications.filter((item) => !item.isRead);
     }
     return notifications;
-  }, [notificationFilter, notifications, unreadCount]);
+  }, [notificationFilter, notifications]);
 
   const handleLogin = async (credentials) => {
     setError("");
@@ -106,6 +101,7 @@ function App() {
       filter={notificationFilter}
       onFilterChange={setNotificationFilter}
       notifications={visibleNotifications}
+      onNotificationClick={markNotificationAsRead}
     />
   );
 
@@ -157,6 +153,30 @@ function App() {
           </Row>
 
           <RecentNotificationFeedCard notifications={notifications} />
+
+          <section className="scroll-test-section">
+            <Title level={4}>Scroll test content</Title>
+            <Paragraph type="secondary">
+              This area is intentionally long so you can test page scrolling
+              behavior and sticky header interactions.
+            </Paragraph>
+            {Array.from({ length: 18 }, (_, index) => (
+              <article
+                className="scroll-test-block"
+                key={`scroll-test-block-${index}`}
+              >
+                <h4>Sample section #{index + 1}</h4>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
+                  vehicula eros non arcu egestas, at gravida purus feugiat.
+                </p>
+                <p>
+                  Integer commodo, lorem eu convallis laoreet, erat erat
+                  suscipit ligula, non cursus tellus justo et velit.
+                </p>
+              </article>
+            ))}
+          </section>
         </Space>
       </Content>
     </Layout>
