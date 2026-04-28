@@ -1,0 +1,23 @@
+{
+  "name": "websocket-demo-fe",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.2.2",
+    "@stomp/stompjs": "^7.1.1",
+    "antd": "^6.3.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sockjs-client": "^1.6.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.2",
+    "vite": "^5.4.10"
+  }
+}
